@@ -29,18 +29,21 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/argoproj/argo-events/pkg/apis/common.Amount":        schema_argo_events_pkg_apis_common_Amount(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.Backoff":       schema_argo_events_pkg_apis_common_Backoff(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.BasicAuth":     schema_argo_events_pkg_apis_common_BasicAuth(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.Condition":     schema_argo_events_pkg_apis_common_Condition(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.Int64OrString": schema_argo_events_pkg_apis_common_Int64OrString(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.Metadata":      schema_argo_events_pkg_apis_common_Metadata(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.Resource":      schema_argo_events_pkg_apis_common_Resource(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.S3Artifact":    schema_argo_events_pkg_apis_common_S3Artifact(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.S3Bucket":      schema_argo_events_pkg_apis_common_S3Bucket(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.S3Filter":      schema_argo_events_pkg_apis_common_S3Filter(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.Status":        schema_argo_events_pkg_apis_common_Status(ref),
-		"github.com/argoproj/argo-events/pkg/apis/common.TLSConfig":     schema_argo_events_pkg_apis_common_TLSConfig(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Amount":          schema_argo_events_pkg_apis_common_Amount(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Backoff":         schema_argo_events_pkg_apis_common_Backoff(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.BasicAuth":       schema_argo_events_pkg_apis_common_BasicAuth(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Condition":       schema_argo_events_pkg_apis_common_Condition(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Int64OrString":   schema_argo_events_pkg_apis_common_Int64OrString(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Metadata":        schema_argo_events_pkg_apis_common_Metadata(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Resource":        schema_argo_events_pkg_apis_common_Resource(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.S3Artifact":      schema_argo_events_pkg_apis_common_S3Artifact(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.S3Bucket":        schema_argo_events_pkg_apis_common_S3Bucket(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.S3Filter":        schema_argo_events_pkg_apis_common_S3Filter(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.SASLConfig":      schema_argo_events_pkg_apis_common_SASLConfig(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.SecureHeader":    schema_argo_events_pkg_apis_common_SecureHeader(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.Status":          schema_argo_events_pkg_apis_common_Status(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.TLSConfig":       schema_argo_events_pkg_apis_common_TLSConfig(ref),
+		"github.com/argoproj/argo-events/pkg/apis/common.ValueFromSource": schema_argo_events_pkg_apis_common_ValueFromSource(ref),
 	}
 }
 
@@ -133,6 +136,7 @@ func schema_argo_events_pkg_apis_common_Condition(ref common.ReferenceCallback) 
 					"type": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Condition type.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -140,6 +144,7 @@ func schema_argo_events_pkg_apis_common_Condition(ref common.ReferenceCallback) 
 					"status": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Condition status, True, False or Unknown.",
+							Default:     "",
 							Type:        []string{"string"},
 							Format:      "",
 						},
@@ -147,6 +152,7 @@ func schema_argo_events_pkg_apis_common_Condition(ref common.ReferenceCallback) 
 					"lastTransitionTime": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Last time the condition transitioned from one status to another.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
@@ -198,8 +204,9 @@ func schema_argo_events_pkg_apis_common_Metadata(ref common.ReferenceCallback) c
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -212,8 +219,9 @@ func schema_argo_events_pkg_apis_common_Metadata(ref common.ReferenceCallback) c
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -246,8 +254,9 @@ func schema_argo_events_pkg_apis_common_S3Artifact(ref common.ReferenceCallback)
 				Properties: map[string]spec.Schema{
 					"endpoint": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 					"bucket": {
@@ -283,8 +292,9 @@ func schema_argo_events_pkg_apis_common_S3Artifact(ref common.ReferenceCallback)
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -302,8 +312,9 @@ func schema_argo_events_pkg_apis_common_S3Artifact(ref common.ReferenceCallback)
 								Allows: true,
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Type:   []string{"string"},
-										Format: "",
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
 									},
 								},
 							},
@@ -333,8 +344,9 @@ func schema_argo_events_pkg_apis_common_S3Bucket(ref common.ReferenceCallback) c
 					},
 					"name": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 				},
@@ -353,20 +365,83 @@ func schema_argo_events_pkg_apis_common_S3Filter(ref common.ReferenceCallback) c
 				Properties: map[string]spec.Schema{
 					"prefix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 					"suffix": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Default: "",
+							Type:    []string{"string"},
+							Format:  "",
 						},
 					},
 				},
 				Required: []string{"prefix", "suffix"},
 			},
 		},
+	}
+}
+
+func schema_argo_events_pkg_apis_common_SASLConfig(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SASLConfig refers to SASL configuration for a client",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"mechanism": {
+						SchemaProps: spec.SchemaProps{
+							Description: "SASLMechanism is the name of the enabled SASL mechanism. Possible values: OAUTHBEARER, PLAIN (defaults to PLAIN).",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"userSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "User is the authentication identity (authcid) to present for SASL/PLAIN or SASL/SCRAM authentication",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"passwordSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Password for SASL/PLAIN authentication",
+							Ref:         ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_argo_events_pkg_apis_common_SecureHeader(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "SecureHeader refers to HTTP Headers with auth tokens as values",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"valueFrom": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Values can be read from either secrets or configmaps",
+							Ref:         ref("github.com/argoproj/argo-events/pkg/apis/common.ValueFromSource"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"github.com/argoproj/argo-events/pkg/apis/common.ValueFromSource"},
 	}
 }
 
@@ -390,7 +465,8 @@ func schema_argo_events_pkg_apis_common_Status(ref common.ReferenceCallback) com
 							Items: &spec.SchemaOrArray{
 								Schema: &spec.Schema{
 									SchemaProps: spec.SchemaProps{
-										Ref: ref("github.com/argoproj/argo-events/pkg/apis/common.Condition"),
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/argoproj/argo-events/pkg/apis/common.Condition"),
 									},
 								},
 							},
@@ -455,5 +531,30 @@ func schema_argo_events_pkg_apis_common_TLSConfig(ref common.ReferenceCallback) 
 		},
 		Dependencies: []string{
 			"k8s.io/api/core/v1.SecretKeySelector"},
+	}
+}
+
+func schema_argo_events_pkg_apis_common_ValueFromSource(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ValueFromSource allows you to reference keys from either a Configmap or Secret",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"secretKeyRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.SecretKeySelector"),
+						},
+					},
+					"configMapKeyRef": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("k8s.io/api/core/v1.ConfigMapKeySelector"),
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/api/core/v1.ConfigMapKeySelector", "k8s.io/api/core/v1.SecretKeySelector"},
 	}
 }

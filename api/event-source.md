@@ -279,6 +279,18 @@ messages For more information, visit
 </p>
 </td>
 </tr>
+<tr>
+<td>
+<code>auth</code></br> <em>
+github.com/argoproj/argo-events/pkg/apis/common.BasicAuth </em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>
+Auth hosts secret selectors for username and password
+</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="argoproj.io/v1alpha1.AMQPExchangeDeclareConfig">
@@ -1984,7 +1996,8 @@ Description
 </td>
 <td>
 <p>
-Id is the webhook’s id
+Id is the webhook’s id Deprecated: This is not used at all, will be
+removed in v1.6
 </p>
 </td>
 </tr>
@@ -2006,7 +2019,8 @@ Webhook refers to the configuration required to run a http server
 </td>
 <td>
 <p>
-Owner refers to GitHub owner name i.e. argoproj
+DeprecatedOwner refers to GitHub owner name i.e. argoproj Deprecated:
+use Repositories instead. Will be unsupported in v 1.6
 </p>
 </td>
 </tr>
@@ -2016,7 +2030,8 @@ Owner refers to GitHub owner name i.e. argoproj
 </td>
 <td>
 <p>
-Repository refers to GitHub repo name i.e. argo-events
+DeprecatedRepository refers to GitHub repo name i.e. argo-events
+Deprecated: use Repositories instead. Will be unsupported in v 1.6
 </p>
 </td>
 </tr>
@@ -2129,6 +2144,19 @@ repository once the event source is stopped.
 <p>
 Metadata holds the user defined metadata which will passed along the
 event payload.
+</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>repositories</code></br> <em>
+<a href="#argoproj.io/v1alpha1.OwnedRepositories"> \[\]OwnedRepositories
+</a> </em>
+</td>
+<td>
+<p>
+Repositories holds the information of repositories, which uses repo
+owner as the key, and list of repo names as the value
 </p>
 </td>
 </tr>
@@ -2606,6 +2634,18 @@ features in sarama, defaults to 1.0.0
 </p>
 </td>
 </tr>
+<tr>
+<td>
+<code>sasl</code></br> <em>
+github.com/argoproj/argo-events/pkg/apis/common.SASLConfig </em>
+</td>
+<td>
+<em>(Optional)</em>
+<p>
+SASL configuration for the kafka client
+</p>
+</td>
+</tr>
 </tbody>
 </table>
 <h3 id="argoproj.io/v1alpha1.MQTTEventSource">
@@ -2993,6 +3033,49 @@ TLS configuration for the nsq client.
 <p>
 Metadata holds the user defined metadata which will passed along the
 event payload.
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3 id="argoproj.io/v1alpha1.OwnedRepositories">
+OwnedRepositories
+</h3>
+<p>
+(<em>Appears on:</em>
+<a href="#argoproj.io/v1alpha1.GithubEventSource">GithubEventSource</a>)
+</p>
+<p>
+</p>
+<table>
+<thead>
+<tr>
+<th>
+Field
+</th>
+<th>
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<code>owner</code></br> <em> string </em>
+</td>
+<td>
+<p>
+Orgnization or user name
+</p>
+</td>
+</tr>
+<tr>
+<td>
+<code>names</code></br> <em> \[\]string </em>
+</td>
+<td>
+<p>
+Repository names
 </p>
 </td>
 </tr>

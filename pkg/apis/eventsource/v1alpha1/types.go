@@ -379,6 +379,9 @@ type AMQPEventSource struct {
 	// For more information, visit https://godoc.org/github.com/streadway/amqp#Channel.Consume
 	// +optional
 	Consume *AMQPConsumeConfig `json:"consume,omitempty" protobuf:"bytes,12,opt,name=consume"`
+	// Auth hosts secret selectors for username and password
+	// +optional
+	Auth *apicommon.BasicAuth `json:"auth,omitempty" protobuf:"bytes,13,opt,name=auth"`
 }
 
 // AMQPExchangeDeclareConfig holds the configuration for the exchange on the server
@@ -483,6 +486,9 @@ type KafkaEventSource struct {
 	// Specify what kafka version is being connected to enables certain features in sarama, defaults to 1.0.0
 	// +optional
 	Version string `json:"version" protobuf:"bytes,10,opt,name=version"`
+	// SASL configuration for the kafka client
+	// +optional
+	SASL *apicommon.SASLConfig `json:"sasl,omitempty" protobuf:"bytes,11,opt,name=sasl"`
 }
 
 type KafkaConsumerGroup struct {
@@ -651,16 +657,26 @@ type PubSubEventSource struct {
 	Metadata map[string]string `json:"metadata,omitempty" protobuf:"bytes,9,rep,name=metadata"`
 }
 
+type OwnedRepositories struct {
+	// Orgnization or user name
+	Owner string `json:"owner,omitempty" protobuf:"bytes,1,opt,name=owner"`
+	// Repository names
+	Names []string `json:"names,omitempty" protobuf:"bytes,2,rep,name=names"`
+}
+
 // GithubEventSource refers to event-source for github related events
 type GithubEventSource struct {
 	// Id is the webhook's id
+	// Deprecated: This is not used at all, will be removed in v1.6
 	ID int64 `json:"id" protobuf:"varint,1,opt,name=id"`
 	// Webhook refers to the configuration required to run a http server
 	Webhook *WebhookContext `json:"webhook,omitempty" protobuf:"bytes,2,opt,name=webhook"`
-	// Owner refers to GitHub owner name i.e. argoproj
-	Owner string `json:"owner" protobuf:"bytes,3,opt,name=owner"`
-	// Repository refers to GitHub repo name i.e. argo-events
-	Repository string `json:"repository" protobuf:"bytes,4,opt,name=repository"`
+	// DeprecatedOwner refers to GitHub owner name i.e. argoproj
+	// Deprecated: use Repositories instead. Will be unsupported in v 1.6
+	DeprecatedOwner string `json:"owner" protobuf:"bytes,3,opt,name=owner"`
+	// DeprecatedRepository refers to GitHub repo name i.e. argo-events
+	// Deprecated: use Repositories instead. Will be unsupported in v 1.6
+	DeprecatedRepository string `json:"repository" protobuf:"bytes,4,opt,name=repository"`
 	// Events refer to Github events to subscribe to which the event source will subscribe
 
 	Events []string `json:"events" protobuf:"bytes,5,rep,name=events"`
@@ -691,6 +707,29 @@ type GithubEventSource struct {
 	// Metadata holds the user defined metadata which will passed along the event payload.
 	// +optional
 	Metadata map[string]string `json:"metadata,omitempty" protobuf:"bytes,14,rep,name=metadata"`
+	// Repositories holds the information of repositories, which uses repo owner as the key,
+	// and list of repo names as the value
+	Repositories []OwnedRepositories `json:"repositories,omitempty" protobuf:"bytes,15,rep,name=repositories"`
+}
+
+func (g GithubEventSource) GetOwnedRepositories() []OwnedRepositories {
+	if len(g.Repositories) > 0 {
+		return g.Repositories
+	} else if g.DeprecatedOwner != "" && g.DeprecatedRepository != "" {
+		return []OwnedRepositories{
+			{
+				Owner: g.DeprecatedOwner,
+				Names: []string{
+					g.DeprecatedRepository,
+				},
+			},
+		}
+	}
+	return nil
+}
+
+func (g GithubEventSource) NeedToCreateHooks() bool {
+	return g.APIToken != nil && g.Webhook != nil && g.Webhook.URL != ""
 }
 
 // GitlabEventSource refers to event-source related to Gitlab events

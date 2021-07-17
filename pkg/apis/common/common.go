@@ -108,6 +108,19 @@ type BasicAuth struct {
 	Password *corev1.SecretKeySelector `json:"password,omitempty" protobuf:"bytes,2,opt,name=password"`
 }
 
+// SecureHeader refers to HTTP Headers with auth tokens as values
+type SecureHeader struct {
+	Name string `json:"name,omitempty" protobuf:"bytes,1,opt,name=name"`
+	// Values can be read from either secrets or configmaps
+	ValueFrom *ValueFromSource `json:"valueFrom,omitempty" protobuf:"bytes,2,opt,name=valueFrom"`
+}
+
+// ValueFromSource allows you to reference keys from either a Configmap or Secret
+type ValueFromSource struct {
+	SecretKeyRef    *corev1.SecretKeySelector    `json:"secretKeyRef,omitempty" protobuf:"bytes,1,opt,name=secretKeyRef"`
+	ConfigMapKeyRef *corev1.ConfigMapKeySelector `json:"configMapKeyRef,omitempty" protobuf:"bytes,2,opt,name=configMapKeyRef"`
+}
+
 // TLSConfig refers to TLS configuration for a client.
 type TLSConfig struct {
 	// CACertSecret refers to the secret that contains the CA cert
@@ -126,6 +139,19 @@ type TLSConfig struct {
 	// DeprecatedClientKeyPath refers the file path that contains client key.
 	// Deprecated: will be removed in v1.5, use ClientKeySecret instead
 	DeprecatedClientKeyPath string `json:"clientKeyPath,omitempty" protobuf:"bytes,6,opt,name=clientKeyPath"`
+}
+
+// SASLConfig refers to SASL configuration for a client
+type SASLConfig struct {
+	// SASLMechanism is the name of the enabled SASL mechanism.
+	// Possible values: OAUTHBEARER, PLAIN (defaults to PLAIN).
+	// +optional
+	Mechanism string `json:"mechanism,omitempty" protobuf:"bytes,1,opt,name=mechanism"`
+	// User is the authentication identity (authcid) to present for
+	// SASL/PLAIN or SASL/SCRAM authentication
+	UserSecret *corev1.SecretKeySelector `json:"userSecret,omitempty" protobuf:"bytes,2,opt,name=user"`
+	// Password for SASL/PLAIN authentication
+	PasswordSecret *corev1.SecretKeySelector `json:"passwordSecret,omitempty" protobuf:"bytes,3,opt,name=password"`
 }
 
 // Backoff for an operation
@@ -152,4 +178,14 @@ func (b Backoff) GetSteps() int {
 type Metadata struct {
 	Annotations map[string]string `json:"annotations,omitempty" protobuf:"bytes,1,rep,name=annotations"`
 	Labels      map[string]string `json:"labels,omitempty" protobuf:"bytes,2,rep,name=labels"`
+}
+
+func (s SASLConfig) GetMechanism() string {
+	switch s.Mechanism {
+	case "OAUTHBEARER", "SCRAM-SHA-256", "SCRAM-SHA-512", "GSSAPI":
+		return s.Mechanism
+	default:
+		// default to PLAINTEXT mechanism
+		return "PLAIN"
+	}
 }
